@@ -1,0 +1,155 @@
+<html>
+  <head>
+    <title>CAR</title>
+    <style>
+      canvas {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="three.min.js"></script>
+    <script src="OrbitControls.js"></script>
+    <script>
+      // Scene
+      var scene = new THREE.Scene();
+      var camera = new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth / window.innerHeight,
+        1,
+        10000
+      );
+
+      // Renderer
+      var renderer = new THREE.WebGLRenderer();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+
+      var controls = new THREE.OrbitControls(camera, renderer.domElement);
+      // Road
+      var road = new THREE.PlaneGeometry(50000, 2000, 32);
+      var road_material = new THREE.MeshBasicMaterial({
+        map: new THREE.TextureLoader().load("road.jpg"),
+        wireframe: false,
+        side: THREE.DoubleSide
+      });
+      var plane = new THREE.Mesh(road, road_material);
+      scene.add(plane);
+      plane.rotateX(4.71239);
+
+      var car_base = new THREE.BoxBufferGeometry(800, 150, 300);
+      var car_base_material = new THREE.MeshBasicMaterial({ color: 0xd35400 });
+      var cube1 = new THREE.Mesh(car_base, car_base_material);
+      cube1.position.set(0, 0, 140);
+      plane.add(cube1);
+      cube1.rotateX(-4.71239);
+
+      var car_top = new THREE.BoxBufferGeometry(250, 100, 300);
+      var car_top_material = new THREE.MeshBasicMaterial({ color: 0xe47833 });
+      var cube2 = new THREE.Mesh(car_top, car_top_material);
+      cube2.position.set(-50, 100, 0);
+      cube1.add(cube2);
+
+      // Custom Shape
+      var triangle = new THREE.Shape([
+        new THREE.Vector2(0, 60),
+        new THREE.Vector2(60, 60),
+        new THREE.Vector2(60, 0)
+      ]);
+      var triangle_geometry = new THREE.ExtrudeGeometry(triangle, {
+        bevelEnabled: false,
+        amount: 300
+      });
+      var triangle_geometry_material = new THREE.MeshBasicMaterial({
+        color: 0xe47833
+      });
+      var cube3 = new THREE.Mesh(triangle_geometry, triangle_geometry_material);
+      cube3.position.set(-450, 50, -150);
+      cube1.add(cube3);
+
+      // Custom Shape
+      var triangle = new THREE.Shape([
+        new THREE.Vector2(100, 0),
+        new THREE.Vector2(0, 0),
+        new THREE.Vector2(0, 100)
+      ]);
+      var triangle_geometry = new THREE.ExtrudeGeometry(triangle, {
+        bevelEnabled: false,
+        amount: 300
+      });
+      var triangle_geometry_material = new THREE.MeshBasicMaterial({
+        color: 0xe47833
+      });
+      var cube3 = new THREE.Mesh(triangle_geometry, triangle_geometry_material);
+      cube3.position.set(70, 55, -150);
+      cube1.add(cube3);
+
+      // Custom Shape
+      var triangle = new THREE.Shape([
+        new THREE.Vector2(0, 0),
+        new THREE.Vector2(150, 0),
+        new THREE.Vector2(0, 150)
+      ]);
+      var triangle_geometry = new THREE.ExtrudeGeometry(triangle, {
+        bevelEnabled: false,
+        amount: 300
+      });
+      var triangle_geometry_material = new THREE.MeshBasicMaterial({
+        color: 0xd35400
+      });
+      var cube3 = new THREE.Mesh(triangle_geometry, triangle_geometry_material);
+      cube3.position.set(400, -75, -150);
+      cube1.add(cube3);
+
+      var T1_geometry = new THREE.CylinderGeometry(100, 100, 50, 32);
+      var T1_material = new THREE.MeshBasicMaterial({
+        map: new THREE.TextureLoader().load("tyre.jpg"),
+        wireframe: false,
+        side: THREE.DoubleSide
+      });
+      var T1 = new THREE.Mesh(T1_geometry, T1_material);
+      T1.position.set(-230, -50, 150);
+      cube1.add(T1);
+      T1.rotateX(4.71239);
+
+      var T2 = new THREE.Mesh(T1_geometry, T1_material);
+      T2.position.set(-230, -50, -150);
+      cube1.add(T2);
+      T2.rotateX(4.71239);
+
+      var T3 = new THREE.Mesh(T1_geometry, T1_material);
+      T3.position.set(230, -50, -150);
+      cube1.add(T3);
+      T3.rotateX(4.71239);
+
+      var T4 = new THREE.Mesh(T1_geometry, T1_material);
+      T4.position.set(230, -50, 150);
+      cube1.add(T4);
+      T4.rotateX(4.71239);
+
+      camera.position.z = 2500;
+      camera.position.y = 200;
+
+      function render() {
+        requestAnimationFrame(render);
+        T1.rotation.y += 0.05;
+        T2.rotation.y += 0.05;
+        T3.rotation.y += 0.05;
+        T4.rotation.y += 0.05;
+        cube1.translateX(5);
+        renderer.render(scene, camera);
+      }
+
+      window.addEventListener("resize", function() {
+        var width = window.innerWidth;
+        var height = window.innerHeight;
+        renderer.setSize(width, height);
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+      });
+
+      render();
+    </script>
+  </body>
+</html>
